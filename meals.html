@@ -6,81 +6,15 @@
 ┃  For questions or suggestions, reach out to PASHA (.psh) on Discord, or @0xff.nu on Bsky  ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-## Notes:
-1. The QR codes are made with https://github.com/davidshimjs/qrcodejs
-that is hosted on CDNJS. Error correction is low because the format
-is digital and will not suffer any kind of damage.
-2. You can disable QR codes via the configuration.
-3. Your mealie instance API endpoints needs to be accessible.
-4. You might hit CORS issues, in which case you will need to configure
-your forward proxy (or however else you host Mealie) to respond well
-to the CORS requests, incl. OPTIONS.
-5. I didn't take into account that multiple dishes might be a part of a meal.
-I can address this at a later point.
-
-## Tips:
-1. If you're using Cloudflare/other WAF solutions, I would suggest using either
-a header or a query to help identify and exempt the request from being blocked.
-Both are already set in the config, but you can modify and/or remove them.
 -->
-{% assign meals = "breakfast,lunch,dinner" | split: ',' %}
-{% assign breakfast = data | where: "entryType", "breakfast" %}
-{% assign lunch = data | where: "entryType", "lunch" %}
-{% assign dinner = data | where: "entryType", "dinner" %}
+{% assign meals = "breakfast,lunch,dinner,side" | split: ',' %}
+{% assign mealtypes = data | map: "entryType" | uniq %}
 
 <style>
   .content :is(.description, .title) {
     word-break: normal;
   }
 </style>
-{% if trmnl.plugin_settings.custom_fields_values.enable_qr == "enable" %}
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-<script type="text/javascript">
-  async function getRecipe(slug) {
-    const url = `{{ trmnl.plugin_settings.custom_fields_values.url }}api/recipes/${slug}?unique=trmnl`;
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Authorization: "Bearer {{ trmnl.plugin_settings.custom_fields_values.token }}",
-          Accept: "application/json"
-        }
-      });
-      if (!response.ok) throw new Error("Fetch error");
-      const blob = await response.blob();
-      return URL.createObjectURL(blob);
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
-
-  async function getRecipes() {
-    const recipes = {
-      breakfast: "{{ breakfast[0].recipe.slug }}",
-      lunch: "{{ lunch[0].recipe.slug }}",
-      dinner: "{{ dinner[0].recipe.slug }}"
-    };
-
-    for (const [key, slug] of Object.entries(recipes)) {
-      if (!slug) continue;
-      console.log(`Trying to get recipe: ${slug}`);
-      const recipe = await getRecipe(slug);
-      if (recipe) {
-        const qrcode = new QRCode(document.getElementById(`${key}-qrcode`), {
-          text: `{{ trmnl.plugin_settings.custom_fields_values.url }}g/home/r/${slug}`,
-          width: 128,
-          height: 128,
-          colorDark : '#000',
-          colorLight : '#fff',
-          correctLevel : QRCode.CorrectLevel.L
-        });
-      }
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", getRecipes);
-</script>
-{% endif %}
 <div class="layout layout--col layout--stretch-x">
     <div class="title_bar">
     <img class="image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAQAAACQTsNJAAAD1UlEQVRIx5XUe6zPdRjA8c85v5/j59IhUiKTSy1DVpJMon+qjSJN03JKbiNrFDa0+DXa5BKKrcukVNa0/NMftdVyaliZ2x/OJqJj7nJcDo7jON/vqz/O17kjz1/f73N5f57n+TyfJ4RbEjljM9qPzVzP3FLL/wEZaKVtFuvawPRXR/PstN2LUjfKwgj7xYgUVvSpY9yQ8oEzYLcpm9KNIyY1McAe0S49lXDFstWd5NSc0NexSFYR/O35bG5DxKiU/grZrZVgAZy3VrcEMzbjfZXrBcH3cMQLDbMx1E52ywgminEFfjxYVdSRtjbxjCBoYjoUm1WUVwMYkva0YvEuacF0Md6Sr4RL5kuFEHSwj85CgvlSzAHjNiQtzqYNsE1cKF8wQ4TX5UrZS+SI0aNSwX0O0TaBBMFmOGR4Nh1CCPr7hZ3yBaNVYpkcOb5FBWzTKejgTwbUgiSNO2bq/qYyNnJQE6HqbDMFeX7HBd3gtIfDkIzPxMvrQFKmiTlqvu6Ky7RL9M30FuQ5iEvuEKogPUM210suF+tYBxP8IOKEV5ScrKPPtQWlHhH0gsPuDyForpDjUvUwn1Rd+IHz0rW0zRxSrq+gsxIiX4xoXTUF/fzEfm3qQHK8BkfZUeeAtDxBFxWU+Ua7ZBKyuQbbxG+618GkXaYi9qmcelk+roQyH1/pUWsis2mD7WGv22oh3kHs1+rMrlke9S+V1pU+0PCVDrCFi1olruvBguSvj8IE00s55dZr2/hTf8h37HOvHLsQm5EghruEE445KuKsFdpfZ2Nkcz1os3inlYhtrC5gnUrOOancWUVmF3e5webK5hqkSExsTZ1WLhFz3BLjzvQedYPVVVVU2jwnmZAED6v1FXPGIk1vgtjazEznI+8lgUNVqKzGTHeVi+YU3Wgbb2pptGOxdUlQVxFlSumRaFaJOGX8z62uX8g0h5mTBPRzldjnlorjZG0Fk+GUuZo1hsizUGlsfOJcIKLCKq3lW6yMudUlVnLJh1rUQ2xvZYpzkaWJ4yAx533tzhBCeLONFU4zMhm3Ocq5aNbWNrWzaG6Cw7GF1dMZUe4r3a55/HGPFS7wRHWLKzluakl+DWSMExQkDs+JiCyvyuKazL7dLFdiryZez4opMbEGMk95cZLqaDGlVjeoOAzJWO4csxLMDiosqoEUOMAUKQOrXsZanRq9v7utdJJhchWIOWJytfGfjNlOs0bEVR81jgghhPV3edtl1sE57+7Pr2XMZhQ4IVZqScNC6hU1zVmxM6Zkm9czTmriMWMMfzk/3EQKWnjKSE++cbM3dGvyH4thNZfHvdXQAAAAAElFTkSuQmCC" />
@@ -91,12 +25,14 @@ Both are already set in the config, but you can modify and/or remove them.
   </div>
   <div class="stretch-y layout layout--col">
     {% for meal in meals %}
-        {% assign meal_type = meal | capitalize %}
         {% assign recipes = data | where: "entryType", meal %}
         {% unless recipes.size == 0 %}
-          <div class="mealblock mb--3 stretch">
-            <span class="label label--underline">{{ meal_type }}</span>
+          <div class="mealblock stretch">
+            <div class="">
+              <span class="label label--underline">{{ meal | replace: "side", "dessert" | capitalize }}</span>
+            </div>
             {% for mealitem in recipes %}
+              {% assign mealitem_number = forloop.index %}
               {% assign idnum = mealitem.id %}
               {% assign recipe_title = mealitem.title %}
               {% assign recipe_name = "" %}
@@ -105,8 +41,15 @@ Both are already set in the config, but you can modify and/or remove them.
               {% elsif recipe_title %}
                 {% assign recipe_name = recipe_title %}
               {% endif %}
-            <span class="title--small ">{{ recipe_name }}</span>
-            <!--span class="description clamp--8">{{ recipe[0].recipe.description | default: "I guess we starve, then" }}</span-->
+            <div class="item mt--2">
+                <div class="meta">
+                  <span class="index">{{ mealitem_number }}</span>
+                </div>
+              <div class="content">
+                <span class="title title--small ">{{ recipe_name }}</span>
+                <span class="description clamp--2">{{ mealitem.recipe.description }}</span-->
+              </div>
+            </div>
             {% endfor %}
           </div>
         {% endunless %}
