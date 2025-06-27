@@ -3,7 +3,7 @@
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃  Mealie - Today's Meal Plan                                                               ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃  For questions or suggestions, reach out to PASHA (.psh) on Discord, or @0xff.nu on Bsky  ┃
+┃  Modified from Mealie plugin by PASHA (.psh) on Discord, or @0xff.nu on Bsky              ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 -->
@@ -15,8 +15,8 @@
     word-break: normal;
   }
 </style>
-<div class="layout layout--col layout--stretch-x">
-    <div class="title_bar">
+
+  <div class="title_bar">
     <img class="image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAQAAACQTsNJAAAD1UlEQVRIx5XUe6zPdRjA8c85v5/j59IhUiKTSy1DVpJMon+qjSJN03JKbiNrFDa0+DXa5BKKrcukVNa0/NMftdVyaliZ2x/OJqJj7nJcDo7jON/vqz/O17kjz1/f73N5f57n+TyfJ4RbEjljM9qPzVzP3FLL/wEZaKVtFuvawPRXR/PstN2LUjfKwgj7xYgUVvSpY9yQ8oEzYLcpm9KNIyY1McAe0S49lXDFstWd5NSc0NexSFYR/O35bG5DxKiU/grZrZVgAZy3VrcEMzbjfZXrBcH3cMQLDbMx1E52ywgminEFfjxYVdSRtjbxjCBoYjoUm1WUVwMYkva0YvEuacF0Md6Sr4RL5kuFEHSwj85CgvlSzAHjNiQtzqYNsE1cKF8wQ4TX5UrZS+SI0aNSwX0O0TaBBMFmOGR4Nh1CCPr7hZ3yBaNVYpkcOb5FBWzTKejgTwbUgiSNO2bq/qYyNnJQE6HqbDMFeX7HBd3gtIfDkIzPxMvrQFKmiTlqvu6Ky7RL9M30FuQ5iEvuEKogPUM210suF+tYBxP8IOKEV5ScrKPPtQWlHhH0gsPuDyForpDjUvUwn1Rd+IHz0rW0zRxSrq+gsxIiX4xoXTUF/fzEfm3qQHK8BkfZUeeAtDxBFxWU+Ua7ZBKyuQbbxG+618GkXaYi9qmcelk+roQyH1/pUWsis2mD7WGv22oh3kHs1+rMrlke9S+V1pU+0PCVDrCFi1olruvBguSvj8IE00s55dZr2/hTf8h37HOvHLsQm5EghruEE445KuKsFdpfZ2Nkcz1os3inlYhtrC5gnUrOOancWUVmF3e5webK5hqkSExsTZ1WLhFz3BLjzvQedYPVVVVU2jwnmZAED6v1FXPGIk1vgtjazEznI+8lgUNVqKzGTHeVi+YU3Wgbb2pptGOxdUlQVxFlSumRaFaJOGX8z62uX8g0h5mTBPRzldjnlorjZG0Fk+GUuZo1hsizUGlsfOJcIKLCKq3lW6yMudUlVnLJh1rUQ2xvZYpzkaWJ4yAx533tzhBCeLONFU4zMhm3Ocq5aNbWNrWzaG6Cw7GF1dMZUe4r3a55/HGPFS7wRHWLKzluakl+DWSMExQkDs+JiCyvyuKazL7dLFdiryZez4opMbEGMk95cZLqaDGlVjeoOAzJWO4csxLMDiosqoEUOMAUKQOrXsZanRq9v7utdJJhchWIOWJytfGfjNlOs0bEVR81jgghhPV3edtl1sE57+7Pr2XMZhQ4IVZqScNC6hU1zVmxM6Zkm9czTmriMWMMfzk/3EQKWnjKSE++cbM3dGvyH4thNZfHvdXQAAAAAElFTkSuQmCC" />
     <span class="title">Meals</span>
     <span class="instance">
@@ -55,5 +55,5 @@
         {% endunless %}
     {% endfor %}
   </div>
-</div>
+
 
